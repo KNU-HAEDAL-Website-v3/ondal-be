@@ -57,7 +57,7 @@ curl -i localhost:8080/api/auth/me
 ## 운영 배포 (해달 서버)
 
 - 위치: 공용 서버 `/opt/haedal/3-haedal-ondal/ondal-BE` (git clone, `main` 추적) - JDK 불필요, 이미지 안에서 빌드
-- 주소: API `https://ondal-api.haedal-sos-man-in-the-mirror.com` · FE `https://ondal.haedal-sos-man-in-the-mirror.com`
+- 주소: API `https://ondal-api.knu-haedal-dev.com` · FE `https://ondal.knu-haedal-dev.com`
 - 트래픽 경로: Cloudflare Tunnel(`0-haedal-infra/cloudflared`) → nginx(`0-haedal-infra/nginx`, 컨테이너 `nginx`, :80) → 외부 도커 네트워크 `ngx_to_srv` → `ondal-be:8080`
   - nginx 설정: `/opt/haedal/0-haedal-infra/nginx/conf.d/ondal-api.conf` - `client_max_body_size 15m`(zip 10MB + multipart 여유), `X-Forwarded-Proto https` 고정(nginx는 :80으로 받으므로 `$scheme`을 쓰면 http가 됨)
   - TLS 종단·HTTPS 강제(Always Use HTTPS)는 Cloudflare 대시보드 - 앱은 HTTP만 받고 `forward-headers-strategy: framework`로 https 를 인지
@@ -74,7 +74,7 @@ curl -i localhost:8080/api/auth/me
 | 배포·재배포 | `git pull && sudo docker compose up -d --build` (.env의 `COMPOSE_FILE`이 prod 파일을 지정) |
 | .env 변경 반영 | `sudo docker compose up -d` (컨테이너 재생성 - `restart`만으로는 미반영) |
 | 로그 | `sudo docker compose logs -f ondal-be` |
-| 확인 | `curl https://ondal-api.haedal-sos-man-in-the-mirror.com/api/health` → `{"status":"UP"}` |
+| 확인 | `curl https://ondal-api.knu-haedal-dev.com/api/health` → `{"status":"UP"}` |
 | nginx 설정 변경 후 | `sudo docker exec nginx nginx -t && sudo docker exec nginx nginx -s reload` |
 | Flyway 전환 배포 (1회) | 운영 DB가 Flyway 이전(ddl-auto update)에 생성된 경우: 데이터 폐기 가능하면 `sudo docker compose down && sudo docker volume rm <프로젝트>_ondal-db-data` 후 배포 (권장 - 실사용 전). 보존해야 하면 .env에 `SPRING_FLYWAY_BASELINE_ON_MIGRATE=true` 를 넣고 1회 배포 후 제거 - 단 제약 이름·CHECK가 V1과 달라 후속 마이그레이션 전에 정리 필요 |
 

@@ -116,23 +116,23 @@ ondal:
       token: ${PROBLEM_BANK_GITHUB_TOKEN:}   # 비어 있으면 "깃허브에서 가져오기" 비활성 - 파일 업로드는 계속 가능
   cors:
     # FE 커스텀 도메인들이 기본값(Ondal + HOJ). pages.dev 미리보기 오리진은 세션 쿠키(lax)가 실리지 않아 로그인 불가 - 필요 시 .env에서 쉼표로 추가(공백 금지)
-    allowed-origins: ${CORS_ORIGINS:https://ondal.haedal-sos-man-in-the-mirror.com,https://oj.haedal-sos-man-in-the-mirror.com}
+    allowed-origins: ${CORS_ORIGINS:https://ondal.knu-haedal-dev.com,https://oj.knu-haedal-dev.com}
   auth:
     mode: oidc   # 홈페이지 로그인(Keycloak) - OIDC 인가 코드 + PKCE, BE 가 코드 교환 (docs 결정 7). auth/oidc 패키지
     oidc:
-      # OIDC_ISSUER 는 기본값 없음 - 비어 있으면 기동 실패(placeholder 미해결). 예: https://auth.haedal-sos-man-in-the-mirror.com/realms/haedal
+      # OIDC_ISSUER 는 기본값 없음 - 비어 있으면 기동 실패(placeholder 미해결). 예: https://auth.knu-haedal-dev.com/realms/haedal
       # BE 는 이 공개 주소로 Keycloak 에 접근한다 (Discovery·토큰 교환·JWKS - Cloudflare 경유). ID 토큰의 iss 와 정확히 같아야 한다
       issuer: ${OIDC_ISSUER}
       client-id: ${OIDC_CLIENT_ID:ondal-be}
       client-secret: ${OIDC_CLIENT_SECRET}      # Keycloak 클라이언트(confidential)의 secret - .env 에서 주입
       # Keycloak 클라이언트의 Valid redirect URIs 에 등록된 값과 문자 단위로 같아야 한다
-      redirect-uri: ${OIDC_REDIRECT_URI:https://ondal-api.haedal-sos-man-in-the-mirror.com/api/auth/callback}
+      redirect-uri: ${OIDC_REDIRECT_URI:https://ondal-api.knu-haedal-dev.com/api/auth/callback}
       # 로그인 성공 후 돌아갈 기본 FE. 로그인 실패는 {frontend-url}/login?error=코드 로 보낸다
-      frontend-url: ${FE_URL:https://ondal.haedal-sos-man-in-the-mirror.com}
+      frontend-url: ${FE_URL:https://ondal.knu-haedal-dev.com}
       # FE 가 여럿일 때 app 키 -> 주소. 클라이언트는 ?app=hoj 처럼 **키만** 보내고 오리진은 여기서만 온다(오픈 리다이렉트 차단)
       # HOJ 서브도메인 배포 전에는 비워 두면 된다 - 모든 로그인이 기본 FE 로 돌아간다
       frontend-urls:
-        hoj: ${HOJ_URL:https://oj.haedal-sos-man-in-the-mirror.com}   # 키는 hoj, 주소는 oj.… (2026-09-18 PM 확정 - 짧고 구분하기 쉬운 앞 글자)
+        hoj: ${HOJ_URL:https://oj.knu-haedal-dev.com}   # 키는 hoj, 주소는 oj.… (2026-09-18 PM 확정 - 짧고 구분하기 쉬운 앞 글자)
 
 server:
   # nginx(0-haedal-infra)가 보내는 X-Forwarded-Proto=https 를 신뢰 - springdoc servers URL·리다이렉트가 https 로 나간다
